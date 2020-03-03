@@ -35,10 +35,12 @@ import pandas as pd
 
 
 ```python
-data = None
-male_df =  None
-female_df =  None
+data = pd.read_csv('weight-height.csv')
+male_df =  data.loc[data.Gender == 'Male']
+female_df =  data.loc[data.Gender == 'Female']
 
+print(male_df.describe())
+print(female_df.describe())
 # Male Height mean: 69.02634590621737
 # Male Height sd: 2.8633622286606517
 # Male Weight mean: 187.0206206581929
@@ -49,15 +51,25 @@ female_df =  None
 # Female Weight sd: 19.022467805319007
 ```
 
-    Male Height mean: 69.02634590621737
-    Male Height sd: 2.8633622286606517
-    Male Weight mean: 187.0206206581929
-    Male Weight sd: 19.781154516763813
-    Female Height mean: 63.708773603424916
-    Female Height sd: 2.696284015765056
-    Female Weight mean: 135.8600930074687
-    Female Weight sd: 19.022467805319007
-
+                Height       Weight
+    count  5000.000000  5000.000000
+    mean     69.026346   187.020621
+    std       2.863362    19.781155
+    min      58.406905   112.902939
+    25%      67.174679   173.887767
+    50%      69.027709   187.033546
+    75%      70.988744   200.357802
+    max      78.998742   269.989699
+                Height       Weight
+    count  5000.000000  5000.000000
+    mean     63.708774   135.860093
+    std       2.696284    19.022468
+    min      54.263133    64.700127
+    25%      61.894441   122.934096
+    50%      63.730924   136.117583
+    75%      65.563565   148.810926
+    max      73.389586   202.237214
+    
 
 ## Plot histograms (with densities on the y-axis) for male and female heights 
 
@@ -66,7 +78,13 @@ female_df =  None
 
 
 ```python
-# Your code here
+plt.hist(male_df.Height, bins=10, density = True,  alpha = 0.7, label= 'Male');
+plt.hist(female_df.Height, bins=10, density = True,  alpha = 0.7, label= 'Female');
+plt.ylabel('Frequency')
+plt.xlabel('Height (in)')
+plt.title('Histogram of Heights')
+plt.legend()
+plt.show()
 ```
 
 
@@ -89,17 +107,25 @@ female_df =  None
 
 ```python
 def density(x):
-    
-    pass
+    n, bins = np.histogram(x, 10, density=1)
+    dx = np.zeros(n.size)
+    dy = np.zeros(n.size)
+
+    for i in range(n.size):
+        dx[i] = (bins[i+1]- bins[i])/2+bins[i]
+        dy[i] = n[i]
+    return dx, dy
 
 
 # Generate test data and test the function - uncomment to run the test
-# np.random.seed(5)
-# mu, sigma = 0, 0.1 # mean and standard deviation
-# s = np.random.normal(mu, sigma, 100)
-# x,y = density(s)
-# plt.plot(x,y, label = 'test')
-# plt.legend()
+np.random.seed(5)
+mu, sigma = 0, 0.1 # mean and standard deviation
+s = np.random.normal(mu, sigma, 100)
+x,y = density(s)
+plt.plot(x,y, label = 'test')
+plt.ylabel('Frequency')
+plt.legend()
+plt.show()
 ```
 
 
@@ -110,7 +136,17 @@ def density(x):
 
 
 ```python
-# You code here 
+plt.hist(male_df.Height, bins=10, density = True,  alpha = 0.7, label= 'Male', );
+x,y = density(male_df.Height)
+plt.plot(x,y)
+plt.hist(female_df.Height, bins=10, density = True,  alpha = 0.7, label= 'Female');
+x1,y1 = density(female_df.Height)
+plt.plot(x1,y1)
+plt.ylabel('Frequency')
+plt.xlabel('Height (in)')
+plt.title('Histogram of Heights')
+plt.legend()
+plt.show()
 ```
 
 
@@ -121,7 +157,19 @@ def density(x):
 
 
 ```python
-# Your code here 
+data = male_df.Weight
+plt.hist(data, bins=10, density = True,  alpha = 0.7, label= 'Male', );
+x,y = density(data)
+plt.plot(x,y)
+data = female_df.Weight
+plt.hist(data, bins=10, density = True,  alpha = 0.7, label= 'Female');
+x1,y1 = density(data)
+plt.plot(x1,y1)
+plt.ylabel('Frequency')
+plt.xlabel('Weight (lb)')
+plt.title('Histogram of Weights')
+plt.legend()
+plt.show()
 ```
 
 
@@ -143,15 +191,31 @@ def density(x):
 
 ```python
 # Code for heights here
+import seaborn as sns
+
+sns.distplot(male_df.Height, label = 'Male')
+sns.distplot(female_df.Height, label = 'Female')
+plt.title('Comparing Heights')
+plt.legend()
+plt.show()
+
 ```
 
+    C:\Users\FlatIron_User\.conda\envs\learn-env\lib\site-packages\scipy\stats\stats.py:1713: FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+      return np.add.reduce(sorted[indexer] * weights, axis=axis) / sumval
+    
 
-![png](index_files/index_16_0.png)
+
+![png](index_files/index_16_1.png)
 
 
 
 ```python
-# Code for weights here
+sns.distplot(male_df.Weight, label = 'Male')
+sns.distplot(female_df.Height, label = 'Female')
+plt.title('Comparing Heights')
+plt.legend()
+plt.show()
 ```
 
 
